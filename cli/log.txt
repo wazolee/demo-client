@@ -1,0 +1,15 @@
+[2025-11-29 10:15:23] INFO: Application started successfully
+[2025-11-29 10:15:24] DEBUG: Database connection established
+[2025-11-29 10:15:25] INFO: Loading configuration from /etc/app.conf
+[2025-11-29 10:15:26] WARN: Cache miss for key 'user_session_123'
+[2025-11-29 10:15:27] ERROR: Failed to connect to payment service: connection timeout
+[2025-11-29 10:15:28] INFO: User 'john_doe' logged in from 192.168.1.100
+[2025-11-29 10:15:29] DEBUG: Processing request ID: req_abc123def456
+[2025-11-29 10:15:30] INFO: Order #5234 created by user 'jane_smith'
+[2025-11-29 10:15:31] CRITICAL: High memory usage detected: 89%
+[2025-11-29 10:15:32] ERROR: Disk space low on /home partition: 5% remaining
+[2025-11-29 10:15:33] INFO: Backup completed in 2.34 seconds
+[2025-11-29 10:15:34] DEBUG: API endpoint /api/users responded in 245ms
+[2025-11-29 10:15:35] INFO: Email notification sent to admin@example.com
+[2025-11-29 10:15:36] WARN: Deprecated API version v1 used by client
+[2025-11-29 10:15:37] INFO: Application shutdown initiated
