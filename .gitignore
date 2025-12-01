@@ -35,3 +35,4 @@ go.sum
 # crypto/
 ngc
 ws
+demo*

@@ -26,7 +26,7 @@ var mainCmd = &cobra.Command{
 var callCmd = &cobra.Command{
 	Use:   "call [auth|user] [endpoint]",
 	Short: "Hív egy végpontot (pl. user /users)",
-	Args:  cobra.ExactArgs(2),
+	Args:  cobra.ExactArgs(2),	
 	Run: func(cmd *cobra.Command, args []string) {
 		service := args[0]
 		path := args[1]
