@@ -1,4 +1,6 @@
-Jlink micsoda, használat nélkülözhetővé teszi egy teljes JVM futtatását?A jlink (pontosabban jlink, kisbetűvel) a Java JDK-ban (Java 9 óta) elérhető parancssori eszköz, amely lehetővé teszi egy egyedi, minimalizált Java runtime image (futásidejű környezet) létrehozását.
+Jlink micsoda, használat nélkülözhetővé teszi egy teljes JVM futtatását?
+
+A jlink (pontosabban jlink, kisbetűvel) a Java JDK-ban (Java 9 óta) elérhető parancssori eszköz, amely lehetővé teszi egy egyedi, minimalizált Java runtime image (futásidejű környezet) létrehozását.
 Miért hasznos a jlink?
 Hagyományosan egy Java alkalmazás futtatásához telepíteni kell egy teljes JRE-t (Java Runtime Environment) vagy JDK-t, ami több száz MB méretű, és tartalmaz rengeteg olyan modult és osztályt, amit az adott alkalmazás soha nem használ (pl. Swing GUI, RMI, CORBA stb.).
 A jlink használatával:
@@ -18,7 +20,11 @@ jlink --module-path $JAVA_HOME/jmods --add-modules java.base,java.logging,... --
 Az eredmény egy könyvtár (pl. my-custom-runtime), amiben van bin/java, és ezzel indíthatod az appot: ./my-custom-runtime/bin/java -jar yourapp.jar
 
 Ha moduláris az alkalmazásod (module-info.java-val), még egyszerűbb. Sok build tool (Maven, Gradle pluginok) már integrálja ezt, pl. Spring Boot-hoz is van jlink támogatás Docker image-ek optimalizálására.
-Ha konkrét példára vagy kódra van szükséged, mondd, és segítek részletesebben!van egy cli appom, ami linuxon fut. Fel van véve mint parancs, tehát ha futtatom a shellben: $ myapp akkor fut. ez valójában egy java -jar myapp.jar indulását váltja ki. ezt az appot hogy lehet a jlinkkel megoldani, hogy ne legyen JRE függősége? Vagyis hogy a futtató hostra ne kelljen egy JRE-t vagy JDK-t telepíteni.Igen, a jlink tökéletesen alkalmas erre a célra: létrehoz egy önálló, minimalizált Java runtime image-et (beleértve a szükséges JVM komponenseket), amit az alkalmazásoddal együtt terjeszthetsz. Így a futtató Linux hoston nem kell külön JRE-t vagy JDK-t telepíteni – az image tartalmaz mindent, ami kell. A folyamat feltételezi, hogy a fejlesztői gépeden van JDK (Java 9+), és az appod JAR-ja készen áll.
+Ha konkrét példára vagy kódra van szükséged, mondd, és segítek részletesebben!
+
+**van egy cli appom, ami linuxon fut. Fel van véve mint parancs, tehát ha futtatom a shellben: $ myapp akkor fut. ez valójában egy java -jar myapp.jar indulását váltja ki. ezt az appot hogy lehet a jlinkkel megoldani, hogy ne legyen JRE függősége? Vagyis hogy a futtató hostra ne kelljen egy JRE-t vagy JDK-t telepíteni.**
+
+Igen, a jlink tökéletesen alkalmas erre a célra: létrehoz egy önálló, minimalizált Java runtime image-et (beleértve a szükséges JVM komponenseket), amit az alkalmazásoddal együtt terjeszthetsz. Így a futtató Linux hoston nem kell külön JRE-t vagy JDK-t telepíteni – az image tartalmaz mindent, ami kell. A folyamat feltételezi, hogy a fejlesztői gépeden van JDK (Java 9+), és az appod JAR-ja készen áll.
 Előfeltételek
 
 Az appod JAR-ja legyen moduláris (azaz legyen module-info.java fájl a JAR-ban, ami definiálja a modult). Ha nem moduláris (pl. régi stílusú JAR), akkor is működik, de extra lépések kellenek a függőségek azonosításához.
@@ -28,7 +34,8 @@ Ha van külső függőség (pl. third-party JAR-ok), azokat is bele kell venni a
 Lépések a jlink használatához
 
 Függőségek azonosítása (jdeps használatával)
-Ha az appod nem moduláris, ez kulcsfontosságú:textjdeps --list-deps myapp.jarEz kilistázza a szükséges Java modulokat (pl. java.base, java.logging stb.). Ha van külső JAR függőség, add hozzá őket:textjdeps --module-path /path/to/deps --list-deps myapp.jar
+Ha az appod nem moduláris, ez kulcsfontosságú: **textjdeps --list-deps myapp.jar**
+Ez kilistázza a szükséges Java modulokat (pl. java.base, java.logging stb.). Ha van külső JAR függőség, add hozzá őket:textjdeps --module-path /path/to/deps --list-deps myapp.jar
 Custom runtime image létrehozása (jlink)
 Futtasd a jlinket a JDK-ból:textjlink --add-modules java.base,java.logging,...  # ide a jdeps-ből kapott modulok, vesszővel elválasztva
       --module-path /path/to/deps  # ha vannak külső JAR-ok/modulok
@@ -66,7 +73,11 @@ Build tool integráció: Ha Maven/Gradle-t használsz, vannak pluginok (pl. Mave
 Platformfüggőség: A jlink image platform-specifikus (Linux x64-re buildelj Linuxon). Ha cross-platform kell, külön buildelj Windowsra stb.
 Hibaelhárítás: Ha hiányzik modul, adj hozzá az --add-modules-hez. Ha natív libek kellenek (pl. AWT-hez), a jlink automatikusan kezeli, ha a modul bent van.
 
-Ha megadod az appod részleteit (pl. moduláris-e, milyen függőségek), vagy példakódot, finomíthatom a lépéseket!ez egy maven projectMivel Maven projektben dolgozol, sokkal egyszerűbben és automatikusabban megoldhatod a jlinkkel történő custom runtime létrehozását, mint kézzel parancsokkal. A legegyszerűbb és legajánlottabb megoldás a Badass JLink Plugin használata (hivatalos neve: org.beryx:badass-jlink-plugin), ami kifejezetten Mavenhez készült, és szinte mindent elintéz helyetted.
+Ha megadod az appod részleteit (pl. moduláris-e, milyen függőségek), vagy példakódot, finomíthatom a lépéseket!
+
+**ez egy maven project**
+
+Mivel Maven projektben dolgozol, sokkal egyszerűbben és automatikusabban megoldhatod a jlinkkel történő custom runtime létrehozását, mint kézzel parancsokkal. A legegyszerűbb és legajánlottabb megoldás a Badass JLink Plugin használata (hivatalos neve: org.beryx:badass-jlink-plugin), ami kifejezetten Mavenhez készült, és szinte mindent elintéz helyetted.
 1. A plugin hozzáadása a pom.xml-hez
 Add hozzá ezt a plugin-t a <build><plugins> szekcióba:
 XML<plugin>
